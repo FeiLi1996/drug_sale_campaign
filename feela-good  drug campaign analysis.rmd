@@ -1,0 +1,255 @@
+
+
+#import libraries
+```{r}
+
+library(tidyverse)
+library(data.table)
+library(openxlsx)
+
+
+
+
+```
+
+#utility function
+```{r}
+#Temporary converts a datatable's character datatypes into factor. This way when summarize function is used, it lists out the counts of the categorical variables
+factorize_str <- function (dt){
+  #Making a copy to not affect the original datatable
+  dt_copy <- copy(dt)
+
+  for (col_name in colnames(dt_copy)){
+    if (is.character(dt_copy[[col_name]])){
+        set(dt_copy, j = col_name, value = as.factor(dt_copy[[col_name]]))
+    }
+  }
+  
+    
+  dt_copy
+}
+```
+
+
+#Load the Data
+
+```{r}
+
+
+df <- openxlsx::read.xlsx('dataset.xlsx')
+
+dt <- as.data.table(df)
+
+dt[ , doctor_id:=as.character(doctor_id)]
+dt[ , rx_id:=as.character(rx_id)]
+dt[ , rx_event :=1]
+
+dt
+
+
+
+```
+
+
+```{r}
+
+
+#view summary of dataset
+summary(factorize_str(dt))
+glimpse(dt)
+
+```
+
+```{r}
+
+dt[ , intervention_group := ifelse(has_seen_msg ==1 ,'treatment','control')]
+dt[ , categorical_target_value := ifelse(is_target_drug ==1 ,'target','not_target')]
+dt[ , categorical_pain_value := ifelse(is_pain_drug ==1 ,'pain','not_pain')]
+dt
+
+```
+
+```{r}
+#Check if there are any NAs
+round(colSums(is.na(dt)) *100/nrow(dt),1)
+
+
+
+```
+
+
+```{r}
+
+#check if a doctor can be in the treatment and the control group
+
+dt[ , uniqueN(intervention_group) , by ='doctor_id'][V1>1]
+
+
+
+
+
+```
+
+```{r}
+#Check if there are duplicate prescriptions
+
+dt[ , .(count=.N) , by='rx_id'][count>1]
+
+```
+
+
+```{r}
+
+doctor_agg_dt <- dt [ , .(group=max(intervention_group ), 
+                          rx_cnt=.N , 
+                          is_pain_drug_pct=round(sum(is_pain_drug)*100/.N,1),
+                          is_target_drug_pct=round(sum(is_target_drug)*100/.N,1)),
+                      by='doctor_id']
+doctor_agg_dt
+```
+
+
+```{r}
+
+ggplot(doctor_agg_dt, aes(x=doctor_id, y=is_target_drug_pct,color=group)) +
+  geom_point() 
+
+
+```
+
+```{r}
+
+
+
+
+ggplot(dt, aes (fill=categorical_target_value ,y=rx_event, x=intervention_group)) + 
+    geom_bar(position="fill", stat="identity")
+
+
+```
+```{r}
+ggplot(dt, aes (fill=categorical_pain_value ,y=rx_event, x=intervention_group)) + 
+    geom_bar(position="fill", stat="identity")
+
+```
+
+
+
+
+
+```{r}
+
+
+# Histogram with kernel density
+ggplot(doctor_agg_dt, aes(x = is_target_drug_pct)) + 
+  geom_histogram(aes(y = ..density..),
+                 colour = 1, fill = "white") +
+  geom_density()
+```
+
+```{r}
+# Histogram with kernel density
+ggplot(doctor_agg_dt, aes(x = is_target_drug_pct , fill=group)) + 
+  geom_histogram(aes(y = ..density..)) +
+  geom_density()
+
+
+```
+
+```{r}
+
+# Histogram with kernel density
+ggplot(doctor_agg_dt, aes(x = is_target_drug_pct , fill=group)) + 
+  
+  geom_density(alpha = 0.5)
+
+
+```
+
+```{r}
+# Histogram with kernel density
+ggplot(doctor_agg_dt, aes(x = is_pain_drug_pct , fill=group)) + 
+  
+  geom_density(alpha = 0.5)
+```
+
+
+```{r}
+
+
+group_agg <- doctor_agg_dt[, .(rx_cnt = .N, 
+                                is_pain_drug_pct = mean(is_pain_drug_pct),
+                                is_target_drug_pct = mean(is_target_drug_pct)),
+                            by = 'group']
+
+group_agg
+```
+
+
+```{r}
+
+
+group_agg2 <-   dt[, .(rx_cnt = .N, 
+                                is_pain_drug_pct = round(mean(is_pain_drug)*100,1),
+                                is_target_drug_pct = round(mean(is_target_drug)*100,1)),
+                            by = 'intervention_group']
+
+group_agg2
+```
+
+
+
+#T-test assumptions
+
+##Randomly Sample
+
+It was fake data so probably was not randomly created. However, humans have good imagination skills so pretend this was randomly generated.
+
+## independence
+
+It was fake data so lets imagined each doctor didn't really talk to each other. So doctors can't influence each others behavior.
+
+
+##Normalilty
+
+```{r}
+
+
+# Histogram with kernel density
+ggplot(doctor_agg_dt, aes(x = is_target_drug_pct , fill=group)) + 
+  geom_density(alpha = 0.5)
+
+
+
+#Not perfect but sort of close to normal distribution for both groups
+
+```
+
+
+##Similiar variances
+```{r}
+
+doctor_agg_dt[ , var(is_target_drug_pct) , by ='group']
+
+#The ratio is less than 4 so this passes the variances test
+```
+
+
+```{r}
+doctor_agg_dt
+```
+
+
+#T-test
+```{r}
+
+test_group_data <- doctor_agg_dt[group=='treatment']$is_target_drug_pct
+control_group_data <- doctor_agg_dt[group=='control']$is_target_drug_pct
+
+t.test(test_group_data, control_group_data, var.equal=TRUE)
+```
+
+#conclusion
+
+
+
