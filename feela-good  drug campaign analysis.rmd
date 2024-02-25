@@ -79,7 +79,6 @@ factorize_str <- function (dt){
 
 # 2. Data load and EDA
 ```{r}
-
 #Read in data
 df <- openxlsx::read.xlsx('dataset.xlsx')
 
@@ -98,8 +97,6 @@ head(dt)
 
 
 ```{r}
-
-
 #view summary of dataset
 summary(factorize_str(dt))
 glimpse(dt)
@@ -171,16 +168,12 @@ ggplot(doctor_agg_dt, aes(x = is_target_drug_pct , fill=group)) +
 - insight #1: Looks almost normally distributed. This is required for T-test.
 - insight #2: Looks like there could be a difference because the distributions aren't completely overlapping.
 
-
-
-
-
 ```{r}
 # Distribution of doctors' proportion of pain prescriptions being prescribed
 ggplot(doctor_agg_dt, aes(x = is_pain_drug_pct , fill=group)) + 
   geom_density(alpha = 0.5)
 ```
-- insight:Lots of overlap. This matches the bar graphs from before, supporting the evidence that this covariate 'is_pain_drug_pct' is balanced between two groups
+- insight:Lots of overlap. This matches the bar graphs from before, supporting the evidence that this covariate 'is_pain_drug_pct' is mostly balanced between two groups
 
 
 
@@ -224,7 +217,6 @@ ggplot(doctor_agg_dt, aes(x = is_target_drug_pct , fill=group)) +
 
 ##Similiar variances
 ```{r}
-
 doctor_agg_dt[ , var(is_target_drug_pct) , by ='group']
 #Insight:The ratio is less than 4 so this passes the variances test
 ```
@@ -240,7 +232,7 @@ t.test(test_group_data, control_group_data, var.equal=TRUE)
 
 #conclusion
 
-The campaign had a positive relative lift of (43.1-22.2)/(22.2) = 94% for Feela-Good drug. This was statistically significant with a p-value < 0.001. The A/B testing shows that the campaign intervention was very effective in promoting the new drug. We should roll out more campaigns to doctors that share similiar attributes to the test/control group.
+The campaign had a positive relative lift of 94%[(43.1-22.2)/(22.2)] for Feela-Good drug. This was statistically significant with a p-value < 0.001. The A/B testing showed that the campaign intervention was very effective in promoting the new drug. We should roll out more campaigns to doctors that share similiar attributes to the test/control group.
 
 
 
