@@ -44,22 +44,15 @@ This  synthetic dataset gives information about the doctors'  prescription behav
 ![Alt text](pain_prescription_proportion_between_groups.PNG)
 
 
-- Insight: We can see that the overall salary distribution is skewed to the right.
-- Insight: We see that gender and healthcare major have lots of overlap so they don't seem to influence salary.
-- Insight: However,there seems to be a difference in salary versus filling a medication. Higher salary seems to fill their medication versus lower salary.
-
+- Insight: Seems like both groups have similar tendency to prescribe pain drugs. This is important attribute.This could be a confounding variable if it wasn't balance. We would need to do things to balance this covariate like propensity score weighting/matching.
 ## Group Comparison graph 2
 ![Alt text](target_drug_proportion_between_groups.PNG)
 
-- insight: Gender doesn't seem to play a role as the proportions of filling or not are pretty even between the genders
-- insight: Seems like those that were healthcare major in college would influence a person's decision to pick up the medication. Visually, we can see those that were healthcare majors in college had much high proportions of filling. Those that weren't in healthcare majors in college had much higher proportions of not filling the medication. 
-
+- insight: Seems like the treatment group prescribed more of the campaign drug. Maybe the promotion was effective???
 ## Group Comparison table with attributes
 ![Alt text](attributes_at_group_level.PNG)
 
-- insight: Gender doesn't seem to play a role as the proportions of filling or not are pretty even between the genders
-- insight: Seems like those that were healthcare major in college would influence a person's decision to pick up the medication. Visually, we can see those that were healthcare majors in college had much high proportions of filling. Those that weren't in healthcare majors in college had much higher proportions of not filling the medication. 
-
+- insight: Seems like treatment group has much higher proportion of their prescriptions being related to the campaign
 
 ## Conclusion
-- The campaign had a positive relative lift of (43.1-22.2)/(22.2) = 94% for Feela-Good drug. This was statistically significant with a p-value < 0.001. The A/B testing shows that the campaign intervention was very effective in promoting the new drug. We should roll out more campaigns to doctors that share similiar attributes to the test/control group.
+- The campaign had a positive relative lift of 94%[(43.1-22.2)/(22.2)] for Feela-Good drug. This was statistically significant with a p-value < 0.001. The A/B testing shows that the campaign intervention was very effective in promoting the new drug. We should roll out more campaigns to doctors that share similiar attributes to the test/control group.
