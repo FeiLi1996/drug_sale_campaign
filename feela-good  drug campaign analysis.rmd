@@ -43,8 +43,10 @@ This  synthetic dataset gives information about the doctors'  prescription behav
 # Table of Contents
 1. Import Packages
 2. Data load and EDA
-
-
+3. Graphs
+4. T-test assumptions
+5. T-test
+6. Conclusion
 
 # 1.Import Packages
 ```{r ,warning=FALSE ,error=FALSE ,message=FALSE ,results='hide'}
@@ -142,13 +144,14 @@ doctor_agg_dt
 ```
 
 
-
+# 3.Graphs
 ```{r}
 # Visualize the proportion of campaign drug being  prescribed between the treatment and control group   
 ggplot(dt, aes (fill=categorical_target_value ,y=rx_event, x=intervention_group)) + 
     geom_bar(position="fill", stat="identity") + 
   labs( title = "Treatment vs Control:Proportions of Campaign Drug Prescriptions", y = "rx_events_proportion")
 ```
+<br/>
 - Insight: Seems like the treatment group prescribed more of the campaign drug. Maybe the promotion was effective???
 
 
@@ -158,6 +161,7 @@ ggplot(dt, aes (fill=categorical_pain_value ,y=rx_event, x=intervention_group)) 
     geom_bar(position="fill", stat="identity") +
   labs( title = "Treatment vs Control:Proportions of Pain Drug Prescriptions", y = "rx_events_proportion")
 ```
+<br/>
 - Insight: Seems like both groups have similar tendency to prescribe pain drugs. This is important attribute.This could be a confounding variable if it wasn't balance. We would need to do things to balance this covariate like propensity score weighting/matching.
 
 ```{r}
@@ -165,15 +169,17 @@ ggplot(dt, aes (fill=categorical_pain_value ,y=rx_event, x=intervention_group)) 
 ggplot(doctor_agg_dt, aes(x = is_target_drug_pct , fill=group)) + 
   geom_density(alpha = 0.5)
 ```
-- insight #1: Looks almost normally distributed. This is required for T-test.
-- insight #2: Looks like there could be a difference because the distributions aren't completely overlapping.
+<br/>
+- Insight #1: Looks almost normally distributed. This is required for T-test.
+- Insight #2: Looks like there could be a difference because the distributions aren't completely overlapping.
 
 ```{r}
 # Distribution of doctors' proportion of pain prescriptions being prescribed
 ggplot(doctor_agg_dt, aes(x = is_pain_drug_pct , fill=group)) + 
   geom_density(alpha = 0.5)
 ```
-- insight:Lots of overlap. This matches the bar graphs from before, supporting the evidence that this covariate 'is_pain_drug_pct' is mostly balanced between two groups
+<br/>
+- Insight:Lots of overlap. This matches the bar graphs from before, supporting the evidence that this covariate 'is_pain_drug_pct' is mostly balanced between two groups
 
 
 
@@ -187,14 +193,15 @@ group_agg <- doctor_agg_dt[, .(rx_cnt = .N,
 
 group_agg
 ```
-- insight: Seems like treatment group has much higher proportion of their prescriptions being related to the campaign
+<br/>
+- Insight: Seems like treatment group has much higher proportion of their prescriptions being related to the campaign
 
 
 
 
-#T-test assumptions
+# 4.T-test assumptions
 
-##Randomly Sample
+## Randomly Sample
 
 It was fake data so probably was not randomly created. However, humans have good imagination skills so pretend this was randomly generated.
 
@@ -203,7 +210,7 @@ It was fake data so probably was not randomly created. However, humans have good
 It was fake data so lets imagined each doctor didn't really talk to each other. So doctors can't influence each others behavior.
 
 
-##Normalilty
+## Normalilty
 
 ```{r}
 
@@ -215,13 +222,13 @@ ggplot(doctor_agg_dt, aes(x = is_target_drug_pct , fill=group)) +
 ```
 
 
-##Similiar variances
+## Similiar variances
 ```{r}
 doctor_agg_dt[ , var(is_target_drug_pct) , by ='group']
 #Insight:The ratio is less than 4 so this passes the variances test
 ```
 
-#T-test
+# 5.T-test
 ```{r}
 
 test_group_data <- doctor_agg_dt[group=='treatment']$is_target_drug_pct
@@ -230,9 +237,9 @@ control_group_data <- doctor_agg_dt[group=='control']$is_target_drug_pct
 t.test(test_group_data, control_group_data, var.equal=TRUE)
 ```
 
-#conclusion
+# 6.conclusion
 
-The campaign had a positive relative lift of 94%[(43.1-22.2)/(22.2)] for Feela-Good drug. This was statistically significant with a p-value < 0.001. The A/B testing showed that the campaign intervention was very effective in promoting the new drug. We should roll out more campaigns to doctors that share similiar attributes to the test/control group.
+The campaign had a positive relative lift of 94%[(43.1-22.2)/(22.2)] for Feela-Good drug. This was statistically significant with a p-value < 0.001. The A/B testing showed that the campaign intervention was very effective in promoting the new drug. We should roll out more campaigns to doctors that share similar attributes to the test/control group.
 
 
 

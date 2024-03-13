@@ -48,11 +48,11 @@ This  synthetic dataset gives information about the doctors'  prescription behav
 ## Group Comparison graph 2
 ![Alt text](target_drug_proportion_between_groups.PNG)
 
-- insight: Seems like the treatment group prescribed more of the campaign drug. Maybe the promotion was effective???
+- Insight: Seems like the treatment group prescribed more of the campaign drug. Maybe the promotion was effective???
 ## Group Comparison table with attributes
 ![Alt text](attributes_at_group_level.PNG)
 
-- insight: Seems like treatment group has much higher proportion of their prescriptions being related to the campaign
+- Insight: Seems like treatment group has much higher proportion of their prescriptions being related to the campaign
 
 ## Conclusion
 - The campaign had a positive relative lift of 94%[(43.1-22.2)/(22.2)] for Feela-Good drug. This was statistically significant with a p-value < 0.001. The A/B testing shows that the campaign intervention was very effective in promoting the new drug. We should roll out more campaigns to doctors that share similiar attributes to the test/control group.
