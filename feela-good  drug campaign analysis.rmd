@@ -2,9 +2,10 @@
 # Drug Sale Campaign
 ## About Drug Sale Campaign
 
-When a new drug hits the market, not every clinician is aware of the drug treatment because there are too much information on the web these days. One way to promote a new drug awareness is through campaigns. This could be advertisements on certain medical related websites or targeted messages in certain medical software applications like a prescribing application. 
+When a new drug enters the market, not every clinician is aware of the drug treatment because there is an oversaturation of information on the internet. One way to promote a new drug awareness is through campaigns. This could be advertisements on certain medical related websites or targeted messages in certain medical software applications like a prescribing application. 
 
 This project focuses on evaluating a campaign effectiveness to promote a new drug called 'FEELA-GOOD' . FEELA-GOOD is a medication that relieves pain and makes you feel good. This is a special drug because it has no side effects except maybe emptying your cash wallet.We are all aware of the danger of opioids in pain management. Opioids are great for relieving pain but there are high risk of addiction and overdose that might lead to death. According to CDC, in 2021, over 75% of the approximately 107,000 drug overdose fatalities were attributed to opioids.This translates to a staggering 80,000+ lives lost to opioid overdoses in the same year, equating to an average of 220 individuals per day. It's crucial to recognize that these figures are likely conservative estimates, and the opioid crisis is likely to escalate, as evidenced by numerous tragic overdose incidents reported in the news.
+
 
 
 ## About the Data set
